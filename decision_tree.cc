@@ -10,6 +10,8 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+#include <stdlib.h>
+#include <time.h>
 
 extern gmp_randclass gmp_prn;
 
@@ -227,11 +229,29 @@ void secure_class_generation_polynomial(mpz_class (*edges)[2], mpz_class (*leaf_
     }
 
     mpz_class final[2];
+
+    auto random_mask_start = std::chrono::steady_clock::now();
+
+    std::vector<mpz_class> random_masks(num_leaf);
+    mpz_class sum = 0;
+    for (int i = 0; i < num_leaf - 1; i++)  {
+        random_masks[i] = gmp_prn.get_z_range(CONFIG_P);
+        sum += random_masks[i];
+    }
+    random_masks[num_leaf-1] = CONFIG_P - sum;
+    for (int i = 0; i < num_leaf; i++) {
+        leaf_value[i][0] + random_masks[i];
+    }
+    auto random_mask_end = std::chrono::steady_clock::now();
+    double time = std::chrono::duration<double, std::milli>(random_mask_end - random_mask_start).count();
+    std::cout << time << " + ";
+
+
     // final value
     for(int i=0; i < num_leaf; ++i) {
         secure_mul(path_mul[i], leaf_value[i], leaf_value[i], tri);
 
-        final[0] += leaf_value[i][0];
+        final[0] += leaf_value[i][0]  + random_masks[i];
         final[1] += leaf_value[i][1];
     }
 }

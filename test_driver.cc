@@ -13,7 +13,7 @@
 
 extern gmp_randclass gmp_prn;
 
-const int param_nd[5][2] = {{9,8}, {13,3}, {13,13}, {15,4}, {57,17}};
+const int param_nd[5][2] = {{13,13}};
 
 auto start = std::chrono::steady_clock::now(), end = std::chrono::steady_clock::now();
 #define CLOCK_START {start = std::chrono::steady_clock::now();}
@@ -151,7 +151,7 @@ void test_cloud(int num_trial)
 	int n, m;
 
 	// secure input selection
-	for(int i=0; i<5; ++i)
+	for(int i=0; i<1; ++i)
 	{
 		n = param_nd[i][0];
 		m = pow(2, param_nd[i][1]) - 1;
@@ -185,13 +185,13 @@ void test_cloud(int num_trial)
 			cache_flusher();
 		}
 
-		printf("secure node selection (n=%d, d=%d, m=%d): %f ns\n", n, param_nd[i][1], m, time_total/num_trial/2); // count only one party
+		printf("secure node selection (n=%d, d=%d, m=%d): %f ms\n", n, param_nd[i][1], m, time_total/ 1000000); // count only one party
 	}
 
 	// secure node evaluation
 	triplet_b tri_b;
 	triplet_z tri_z;
-	for(int i=0; i<5; ++i)
+	for(int i=0; i<1; ++i)
 	{
 		n = param_nd[i][0];
 		m = pow(2, param_nd[i][1]) - 1;
@@ -214,7 +214,7 @@ void test_cloud(int num_trial)
 			cache_flusher();
 		}
 
-		printf("secure node evaluation (n=%d, d=%d, m=%d): %f ns\n", n, param_nd[i][1], m, time_total/num_trial/2); // count only one party
+		printf("secure node evaluation (n=%d, d=%d, m=%d): %f ms\n", n, param_nd[i][1], m, time_total/ 1000000); // count only one party
 
 		// for(int j=0; j<m; ++j) {
 		// 	delete[] x[j];
@@ -227,7 +227,7 @@ void test_cloud(int num_trial)
 	// secure class generation via path cost
 	// simulate one party since no multiplication involved
 	int d;
-	for(int i=0; i<5; ++i)
+	for(int i=0; i<1; ++i)
 	{
 		n = param_nd[i][0];
 		d = param_nd[i][1];
@@ -249,11 +249,11 @@ void test_cloud(int num_trial)
 			cache_flusher();
 		}
 
-		printf("secure class generation via path cost (n=%d, d=%d): %f ns\n", n, d, time_total/num_trial); // one party
+		printf("secure class generation via path cost (n=%d, d=%d): %f ms\n", n, d, time_total/1000000); // one party
 	}
 
 	// secure class generation via polynomial
-	for(int i=0; i<5; ++i)
+	for(int i=0; i<1; ++i)
 	{
 		n = param_nd[i][0];
 		d = param_nd[i][1];
@@ -289,6 +289,6 @@ void test_cloud(int num_trial)
 		delete[] interm_rlt;
 		delete[] path_mul;
 
-		printf("secure class generation via polynomial (n=%d, d=%d): %f ns\n", n, d, time_total/num_trial/2);
+		printf("\nsecure class generation via polynomial (n=%d, d=%d): %f ms\n", n, d, time_total / 1000000);
 	}
 }
