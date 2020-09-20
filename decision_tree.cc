@@ -135,7 +135,16 @@ void secure_node_evaluation(mpz_class x[2], mpz_class y[2], const triplet_z& tri
     // extract MSB
     int al[2];
     // secure_mul(w, c, al, tri_b); historic error
-    SS_DO(al[i] = w[i] + c[i];)
+    for (int j = 0; j < CONFIG_L; j++)
+        SS_DO(al[i] = w[i] + c[i];)
+
+    int u[0];
+    for (int j = 0; j < CONFIG_L; j++)
+        SS_DO(u[i] *= (1-al[i]);)
+
+    SS_DO(u[i] = 1-u[i];)
+
+    return ;
 
     // int alv;
     // ss_decrypt(alv, al);

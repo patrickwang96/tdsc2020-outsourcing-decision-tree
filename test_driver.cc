@@ -12,6 +12,8 @@
 #include <vector>
 
 extern gmp_randclass gmp_prn;
+#define SS_DO(expr) \
+    for(int i=0; i<2; ++i) {expr}
 
 const int param_nd[5][2] = {{13,13}};
 
@@ -194,7 +196,8 @@ void test_cloud(int num_trial)
 	for(int i=0; i<1; ++i)
 	{
 		n = param_nd[i][0];
-		m = pow(2, param_nd[i][1]) - 1;
+//		m = pow(2, param_nd[i][1]) - 1;
+        m = 50;
 
 		// ugly staff for preparation
 		mpz_class (*x)[2] = new mpz_class [m][2], (*y)[2] = new mpz_class [m][2];
@@ -206,15 +209,20 @@ void test_cloud(int num_trial)
 		double time_total = 0;
 		for(int j=0; j<num_trial; ++j) {
 			CLOCK_START
-			for(int k=0; k<m; ++k)
-				secure_node_evaluation(x[k], y[k], tri_z, tri_b);
+			for(int k=0; k<m; ++k){
+                secure_node_evaluation(x[k], y[k], tri_z, tri_b);
+			}
+			mpz_class a[2], b[2];
+			for (int k = 0; k < m; k++)
+			    SS_DO(a[i] *= b[i];)
+			SS_DO(a[i] = 1-b[i];)
 			CLOCK_END
 			time_total += ELAPSED;
 
 			cache_flusher();
 		}
 
-		printf("secure node evaluation (n=%d, d=%d, m=%d): %f ms\n", n, param_nd[i][1], m, time_total/ 1000000); // count only one party
+		printf("secure node evaluation (n=%d, d=%d, m=%d): %f ms\n", n, param_nd[i][1], m, time_total/ 1000000 / num_trial / 2); // count only one party
 
 		// for(int j=0; j<m; ++j) {
 		// 	delete[] x[j];
